@@ -1,0 +1,29 @@
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const ss = SpreadsheetApp.openByUrl('https://docs.google.com/spreadsheets/d/1ZNnTGWegsXd7tT0bO3TVdLGURiZbg7FGcBi55r-130I/edit#gid=0');
+    const sheet = ss.getSheetByName('accounts');
+    const rowData = [
+      data.title,
+      data.description,
+      `https://www.youtube.com/embed/${data.youtubeId}`,
+      data.thumbnailUrl,
+      data.imageUrl,
+      data.number
+    ];
+    sheet.appendRow(rowData);
+    return ContentService.createTextOutput(JSON.stringify({
+      'status': 'success',
+      'message': 'Data successfully recorded'
+    })).setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      'status': 'error',
+      'message': error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  return ContentService.createTextOutput('The script is working');
+}
